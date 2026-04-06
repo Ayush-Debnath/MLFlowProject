@@ -1,7 +1,7 @@
 from mlOpsProject.constants import *
 from pathlib import Path
 from mlOpsProject.utils.common import read_yaml,create_directories
-from mlOpsProject.entity.config_entity import DataIngestionConfig, DataTransformationConfig, DataValidationConfig, ModelTrainerConfig
+from mlOpsProject.entity.config_entity import DataIngestionConfig, DataTransformationConfig, DataValidationConfig, ModelEvaluationConfig, ModelTrainerConfig
 
 class ConfigurationManager:
     def __init__(
@@ -77,4 +77,25 @@ class ConfigurationManager:
         )
 
         return model_trainer_config
+    
+    def get_model_evaluation_config(self) -> ModelEvaluationConfig:
+        config = self.config.model_evaluation
+        params= self.params.ElasticNet
+        schema= self.schema.TARGET_COLUMN
+        
+    
+        create_directories([config.root_dir])
+        
+        model_evaluation_config = ModelEvaluationConfig(
+            root_dir=config.root_dir,
+            test_data_path=config.test_data_path,
+            
+            model_path=config.model_path,
+            metric_file_name=config.metric_file_name,
+            all_params=params,
+            target_column=schema.name,
+            mlflow_uri="https://dagshub.com/Ayush-Debnath/MLFlowProject.mlflow"
+        )
+        
+        return model_evaluation_config
     
